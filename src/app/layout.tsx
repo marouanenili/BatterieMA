@@ -17,13 +17,13 @@ export default function RootLayout({ children }) {
 
         <header className="flex items-center justify-between px-6 py-4 bg-white shadow">
             <div className="flex items-center space-x-2">
-                <img src="/logo2.png" alt="batterie.ma logo" className="h-8" />
+                <Image src="/logo2.png" alt="batterie.ma logo" className="h-8" />
                 <span className="text-xl font-bold text-blue-600">batterie.ma</span>
             </div>
             <nav className="flex space-x-6 text-gray-700 font-medium">
-                <a href="/" className="hover:text-blue-600">Home</a>
-                <a href="/products" className="hover:text-blue-600">Produits</a>
-                <a href="/contact" className="hover:text-blue-600">Contact</a>
+                <a Link ="/" className="hover:text-blue-600">Home</a>
+                <a Link ="/products" className="hover:text-blue-600">Produits</a>
+                <a Link ="/contact" className="hover:text-blue-600">Contact</a>
             </nav>
         </header>
 

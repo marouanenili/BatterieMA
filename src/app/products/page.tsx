@@ -1,5 +1,4 @@
 // app/products/page.tsx
-import Link from "next/link"
 import Image from "next/image"
 
 export const revalidate = 60 // Revalide toutes les 60 secondes

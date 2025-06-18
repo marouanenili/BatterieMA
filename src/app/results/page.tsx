@@ -7,8 +7,6 @@ import BatteryCard from '@/components/BatteryCard';
 export default function ResultsPage() {
     const searchParams = useSearchParams();
     const brand = searchParams.get('brand');
-    const model = searchParams.get('model');
-    const year = searchParams.get('year');
 
     const results = batteries.filter((battery) =>
         battery.compatibility.includes(brand?.toLowerCase())
