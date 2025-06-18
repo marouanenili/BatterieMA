@@ -1,6 +1,7 @@
 import './globals.css';
 import type { ReactNode } from "react"
-
+import Image from "next/image" // ✅ correct
+import Link from "next/link"
 type RootLayoutProps = {
     children: ReactNode
 }
@@ -25,9 +26,9 @@ export default function RootLayout({ children }:RootLayoutProps) {
                 <span className="text-xl font-bold text-blue-600">batterie.ma</span>
             </div>
             <nav className="flex space-x-6 text-gray-700 font-medium">
-                <a Link ="/" className="hover:text-blue-600">Home</a>
-                <a Link ="/products" className="hover:text-blue-600">Produits</a>
-                <a Link ="/contact" className="hover:text-blue-600">Contact</a>
+                <Link href="/" className="hover:text-blue-600">Home</Link>
+                <Link href="/products" className="hover:text-blue-600">Produits</Link>
+                <Link href="/contact" className="hover:text-blue-600">Contact</Link>
             </nav>
         </header>
 
