@@ -12,7 +12,7 @@ export default function SearchForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const query = `brand=${brand}&model=${model}&year=${year}`;
-        router.push(`/results?${query}`);
+        router.push(`/products?${query}`);
     };
 
     return (
