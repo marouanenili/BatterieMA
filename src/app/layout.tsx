@@ -5,7 +5,7 @@ export const metadata = {
     description: 'batterie.ma : dépannage et installation de batteries auto/moto en urgence',
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }:RootLayoutProps) {
     return (
         <html lang="fr">
         <body className="bg-gray-100 text-gray-900 font-sans"
