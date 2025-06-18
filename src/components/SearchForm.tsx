@@ -9,7 +9,7 @@ export default function SearchForm() {
     const [year, setYear] = useState('');
     const router = useRouter();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const query = `brand=${brand}&model=${model}&year=${year}`;
         router.push(`/products?${query}`);
