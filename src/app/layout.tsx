@@ -1,5 +1,9 @@
 import './globals.css';
+import type { ReactNode } from "react"
 
+type RootLayoutProps = {
+    children: ReactNode
+}
 export const metadata = {
     title: 'batterie.ma – Batteries Auto & Moto',
     description: 'batterie.ma : dépannage et installation de batteries auto/moto en urgence',
