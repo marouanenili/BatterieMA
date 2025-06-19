@@ -1,3 +1,4 @@
+//src/app/types.tsx
 export type Product = {
     id: string
     nom: string
