@@ -1,7 +1,7 @@
 import './globals.css'
 import type { ReactNode } from "react"
 import Navbar from "@/components/Navbar"
-
+import { Toaster } from 'react-hot-toast'
 type RootLayoutProps = {
     children: ReactNode
 }
@@ -27,7 +27,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
         {/* ✅ Page content */}
         <main className="p-6 max-w-4xl mx-auto">{children}</main>
-
+        <Toaster position="top-right" />
+        {/* ... */}
         <footer className="footer mt-12 text-center text-sm text-gray-600">
             © 2025 Batterie.ma — Dépannage et remplacement de batteries à Casablanca et région
         </footer>

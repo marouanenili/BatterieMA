@@ -4,12 +4,14 @@
 import Image from 'next/image'
 import { Product } from '@/types'
 import { addToCart } from '@/lib/cart'
+import { toast } from 'react-hot-toast'
 
 export default function ProductCard({ product }: { product: Product }) {
     const handleAddToCart = () => {
         addToCart(product)
-        alert(`"${product.nom}" a été ajouté au panier !`)
+        toast.success(`Ajouté : ${product.nom}`)
     }
+
 
     return (
         <div className="border p-4 rounded shadow-sm flex flex-col">

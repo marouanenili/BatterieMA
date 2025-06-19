@@ -17,9 +17,12 @@ export default function Navbar() {
 
         updateCartCount()
 
-        // Écoute les changements manuellement (optionnel)
-        window.addEventListener('storage', updateCartCount)
-        return () => window.removeEventListener('storage', updateCartCount)
+        // 🔁 Écoute les changements personnalisés
+        window.addEventListener('cart-updated', updateCartCount)
+
+        return () => {
+            window.removeEventListener('cart-updated', updateCartCount)
+        }
     }, [])
 
     return (
