@@ -6,7 +6,29 @@ import { CartItem, getCart, updateQuantity, removeFromCart, clearCart } from '@/
 import Image from 'next/image'
 
 export default function CartPage() {
+
     const [cart, setCart] = useState<CartItem[]>([])
+    const phoneNumber = '33753644375' // ✅ ton numéro sans le + (212 = Maroc)
+
+    const handleWhatsAppOrder = () => {
+        const lines = cart.map(
+            (item) =>
+                `• ${item.product.nom} (${item.quantity}x) - ${item.product.prix_vente.toFixed(2)} DHS`
+        )
+        const total = cart.reduce(
+            (sum, item) => sum + item.quantity * item.product.prix_vente,
+            0
+        )
+
+        const message = `Bonjour, je souhaite commander les batteries suivantes :\n\n${lines.join(
+            '\n'
+        )}\n\nTotal : ${total.toFixed(2)} DHS`
+
+        const encoded = encodeURIComponent(message)
+        const url = `https://wa.me/${phoneNumber}?text=${encoded}`
+
+        window.open(url, '_blank')
+    }
 
     useEffect(() => {
         setCart(getCart())
@@ -64,13 +86,19 @@ export default function CartPage() {
                         </div>
                     ))}
 
-                    <div className="text-right mt-6">
+                    <div className="text-right mt-6 space-y-3">
                         <p className="text-xl font-bold mb-2">Total : {total.toFixed(2)} DHS</p>
                         <button
                             onClick={handleClear}
                             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                         >
                             Vider le panier
+                        </button>
+                        <button
+                            onClick={handleWhatsAppOrder}
+                            className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                        >
+                            Commander via WhatsApp
                         </button>
                     </div>
                 </div>
