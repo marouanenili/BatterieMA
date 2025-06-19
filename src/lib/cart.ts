@@ -14,6 +14,10 @@ export function getCart(): CartItem[] {
 
 export function saveCart(cart: CartItem[]) {
     localStorage.setItem('cart', JSON.stringify(cart))
+    // 🔔 notifier manuellement
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('cart-updated'))
+    }
 }
 
 export function addToCart(product: Product, quantity: number = 1) {
@@ -28,16 +32,13 @@ export function addToCart(product: Product, quantity: number = 1) {
 
     saveCart(cart)
 
-    // 🔔 notifier manuellement
-    if (typeof window !== 'undefined') {
-        window.dispatchEvent(new Event('cart-updated'))
-    }
 }
 
 
 export function removeFromCart(productId: string) {
     const cart = getCart().filter(item => item.product.id !== productId)
     saveCart(cart)
+
 }
 
 export function updateQuantity(productId: string, quantity: number) {
@@ -45,6 +46,7 @@ export function updateQuantity(productId: string, quantity: number) {
         item.product.id === productId ? { ...item, quantity } : item
     )
     saveCart(cart)
+
 }
 
 export function clearCart() {
