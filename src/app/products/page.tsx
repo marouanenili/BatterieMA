@@ -1,9 +1,7 @@
 'use client'
 
-import Image from "next/image"
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
-
-export const revalidate = 60
 
 type Product = {
     id: string
@@ -14,47 +12,53 @@ type Product = {
     lien_image: string
 }
 
-const [quantities, setQuantities] = useState<{ [id: string]: number }>({})
+export default function ProductsPage() {
+    const [products, setProducts] = useState<Product[]>([])
+    const [quantities, setQuantities] = useState<{ [id: string]: number }>({})
 
-const handleAddToCart = (product: Product) => {
-    const quantity = quantities[product.id] || 1
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch(
+                    'https://raw.githubusercontent.com/marouanenili/stock_updater/main/products.json'
+                )
+                const data: Product[] = await res.json()
+                setProducts(data.filter((p) => p.stock > 0))
+            } catch (err) {
+                console.error('Erreur lors du chargement des produits', err)
+            }
+        }
 
-    if (quantity < 1) {
-        alert("Quantité invalide")
-        return
+        fetchProducts()
+    }, [])
+
+    const handleAddToCart = (product: Product) => {
+        const quantity = quantities[product.id] || 1
+
+        if (quantity < 1) {
+            alert('Quantité invalide')
+            return
+        }
+
+        const storedCart = localStorage.getItem('cart')
+        const cart: { product: Product; quantity: number }[] = storedCart ? JSON.parse(storedCart) : []
+
+        const existing = cart.find((item) => item.product.id === product.id)
+        if (existing) {
+            alert('Ce produit est déjà dans le panier.')
+            return
+        }
+
+        cart.push({ product, quantity })
+        localStorage.setItem('cart', JSON.stringify(cart))
+        alert(`Ajouté ${quantity}x "${product.nom}" au panier.`)
     }
-
-    const storedCart = localStorage.getItem('cart')
-    const cart: { product: Product; quantity: number }[] = storedCart ? JSON.parse(storedCart) : []
-
-    const existing = cart.find((item) => item.product.id === product.id)
-    if (existing) {
-        alert("Ce produit est déjà dans le panier.")
-        return
-    }
-
-    cart.push({ product, quantity })
-    localStorage.setItem('cart', JSON.stringify(cart))
-    alert(`Ajouté ${quantity}x "${product.nom}" au panier.`)
-}
-
-
-export default async function ProductsPage() {
-    const res = await fetch(
-        'https://raw.githubusercontent.com/marouanenili/stock_updater/main/products.json',
-        { next: { revalidate: 60 } }
-    )
-
-    if (!res.ok) throw new Error('Erreur de chargement des produits')
-
-    const products: Product[] = await res.json()
-    const inStockProducts = products.filter((p) => p.stock > 0)
 
     return (
         <main className="p-6 max-w-7xl mx-auto">
             <h1 className="text-4xl font-bold mb-8">Catalogue produits</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {inStockProducts.map((p) => (
+                {products.map((p) => (
                     <div key={p.id} className="border rounded-lg shadow-sm p-4 flex flex-col">
                         <div className="relative w-full h-48 mb-4 bg-gray-100 rounded overflow-hidden">
                             <Image
@@ -79,7 +83,6 @@ export default async function ProductsPage() {
                             }
                             className="w-full border rounded px-2 py-1 mb-2"
                         />
-
                         <button
                             onClick={() => handleAddToCart(p)}
                             className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
