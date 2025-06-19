@@ -1,7 +1,9 @@
-// app/products/page.tsx
-import Image from "next/image"
+'use client'
 
-export const revalidate = 60 // Revalide toutes les 60 secondes
+import Image from "next/image"
+import { useEffect, useState } from 'react'
+
+export const revalidate = 60
 
 type Product = {
     id: string
@@ -11,6 +13,31 @@ type Product = {
     stock: number
     lien_image: string
 }
+
+const [quantities, setQuantities] = useState<{ [id: string]: number }>({})
+
+const handleAddToCart = (product: Product) => {
+    const quantity = quantities[product.id] || 1
+
+    if (quantity < 1) {
+        alert("Quantité invalide")
+        return
+    }
+
+    const storedCart = localStorage.getItem('cart')
+    const cart: { product: Product; quantity: number }[] = storedCart ? JSON.parse(storedCart) : []
+
+    const existing = cart.find((item) => item.product.id === product.id)
+    if (existing) {
+        alert("Ce produit est déjà dans le panier.")
+        return
+    }
+
+    cart.push({ product, quantity })
+    localStorage.setItem('cart', JSON.stringify(cart))
+    alert(`Ajouté ${quantity}x "${product.nom}" au panier.`)
+}
+
 
 export default async function ProductsPage() {
     const res = await fetch(
@@ -22,6 +49,7 @@ export default async function ProductsPage() {
 
     const products: Product[] = await res.json()
     const inStockProducts = products.filter((p) => p.stock > 0)
+
     return (
         <main className="p-6 max-w-7xl mx-auto">
             <h1 className="text-4xl font-bold mb-8">Catalogue produits</h1>
@@ -29,7 +57,8 @@ export default async function ProductsPage() {
                 {inStockProducts.map((p) => (
                     <div key={p.id} className="border rounded-lg shadow-sm p-4 flex flex-col">
                         <div className="relative w-full h-48 mb-4 bg-gray-100 rounded overflow-hidden">
-                            <Image src="/logo2.png"
+                            <Image
+                                src={p.lien_image}
                                 alt={p.nom}
                                 fill
                                 className="object-contain"
@@ -40,7 +69,23 @@ export default async function ProductsPage() {
                         <p className="text-green-600 font-bold text-lg mb-2">
                             {p.prix_vente.toFixed(2)} DHS
                         </p>
+                        <input
+                            type="number"
+                            min="1"
+                            max={p.stock}
+                            value={quantities[p.id] || 1}
+                            onChange={(e) =>
+                                setQuantities({ ...quantities, [p.id]: Number(e.target.value) })
+                            }
+                            className="w-full border rounded px-2 py-1 mb-2"
+                        />
 
+                        <button
+                            onClick={() => handleAddToCart(p)}
+                            className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                        >
+                            Ajouter au panier
+                        </button>
                     </div>
                 ))}
             </div>
